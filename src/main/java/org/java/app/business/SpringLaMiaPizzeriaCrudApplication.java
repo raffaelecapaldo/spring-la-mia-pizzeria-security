@@ -2,6 +2,10 @@ package org.java.app.business;
 
 import java.time.LocalDate;
 
+import org.java.app.business.db.auth.pojo.Role;
+import org.java.app.business.db.auth.pojo.User;
+import org.java.app.business.db.auth.serv.RoleService;
+import org.java.app.business.db.auth.serv.UserService;
 import org.java.app.business.db.pojo.Ingredient;
 import org.java.app.business.db.pojo.Pizza;
 import org.java.app.business.db.pojo.SpecialOffer;
@@ -12,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class SpringLaMiaPizzeriaCrudApplication implements CommandLineRunner  {
@@ -24,6 +30,12 @@ public class SpringLaMiaPizzeriaCrudApplication implements CommandLineRunner  {
 	
 	@Autowired
 	private IngredientService ingredientService;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private RoleService roleService;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SpringLaMiaPizzeriaCrudApplication.class, args);
@@ -43,11 +55,11 @@ public class SpringLaMiaPizzeriaCrudApplication implements CommandLineRunner  {
 		ingredientService.save(wurstel);
 
 		
-		Pizza pizza1 = new Pizza("Margherita", "La pizza più semplice", "/img/pizza-margherita.jpg", 4.50f, pomodoro, mozzarella);
-		Pizza pizza2 = new Pizza("Capricciosa", "Ogni sfizio è un capriccio", "/img/pizza-capricciosa.jpg", 8.50f, pomodoro, mozzarella);
-		Pizza pizza3 = new Pizza("Marinara", "Per stare leggero", "/img/pizza-marinara.jpg", 6f, pomodoro);
-		Pizza pizza4 = new Pizza("Napoli", "Con le acciughe fresche", "/img/pizza-napoli.webp", 8f, pomodoro, acciughe);
-		Pizza pizza5 = new Pizza("Wurstel e patatine", "Per tutte le età", "/img/pizza-wurstel.jpg", 5.50f, wurstel);
+		Pizza pizza1 = new Pizza("Margherita", "La pizza più semplice", "/images/pizza-margherita.jpg", 4.50f, pomodoro, mozzarella);
+		Pizza pizza2 = new Pizza("Capricciosa", "Ogni sfizio è un capriccio", "/images/pizza-capricciosa.jpg", 8.50f, pomodoro, mozzarella);
+		Pizza pizza3 = new Pizza("Marinara", "Per stare leggero", "/images/pizza-marinara.jpg", 6f, pomodoro);
+		Pizza pizza4 = new Pizza("Napoli", "Con le acciughe fresche", "/images/pizza-napoli.webp", 8f, pomodoro, acciughe);
+		Pizza pizza5 = new Pizza("Wurstel e patatine", "Per tutte le età", "/images/pizza-wurstel.jpg", 5.50f, wurstel);
 
 		pizzaService.save(pizza1);
 		pizzaService.save(pizza2);
@@ -64,6 +76,30 @@ public class SpringLaMiaPizzeriaCrudApplication implements CommandLineRunner  {
 		specialOfferService.save(sp1);
 		specialOfferService.save(sp2);
 		specialOfferService.save(sp3);
+
+		//ROLES
+		
+		Role admin = new Role("ADMIN");
+		Role user = new Role("USER");
+		
+		roleService.save(admin);
+		roleService.save(user);
+		
+		//USERS
+
+		
+		final String userPsw = new BCryptPasswordEncoder().encode("user");
+		final String adminPsw = new BCryptPasswordEncoder().encode("admin");
+		
+		User normalUser = new User("user", userPsw, user);
+		User adminUser = new User("admin", adminPsw, admin, user);
+		
+		userService.save(normalUser);
+		userService.save(adminUser);
+
+		System.out.println("aaaaaaaaaaaaaaaaaaaaaa" + PathRequest.toStaticResources().toString());
+
+
 
 		
 
