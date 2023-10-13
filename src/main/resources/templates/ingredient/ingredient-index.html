@@ -8,7 +8,9 @@
     <main>
         <div class="position-relative">
             <h1 class="text-yellow text-center">Gestione ingredienti</h1>
-            <a class="btn btn-warning position-absolute" id="add-button" th:href="@{/ingredients/create}">Aggiungi un
+            <a
+             sec:authorize="hasAuthority('ADMIN')"
+             class="btn btn-warning position-absolute" id="add-button" th:href="@{/ingredients/create}">Aggiungi un
                 ingrediente</a>
         </div>
 
@@ -28,7 +30,7 @@
                   <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Nome</th>
-                    <th scope="col">Cancella</th>
+                    <th sec:authorize="hasAuthority('ADMIN')" scope="col">Cancella</th>
 
                   </tr>
                 </thead>
@@ -38,7 +40,7 @@
                   th:object="${ingredient}">
                      <td >[[*{id}]]</td>
                      <td >[[*{name}]]</td>
-                     <td>
+                     <td sec:authorize="hasAuthority('ADMIN')">
                         <form class="delete-form" th:action="@{/ingredients/delete/{id}(id=*{id})}" method="POST">
                         <a class="btn btn-danger delete-button"><i class="fa-regular fa-trash-can"></i></a>  
                        </form>
