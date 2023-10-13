@@ -37,6 +37,7 @@ public class AuthConfig {
 		        .requestMatchers("/ingredients").hasAuthority("USER")
 				.requestMatchers("/pizzas/**").hasAuthority("USER")
 		        .requestMatchers("/ingredients/**").hasAuthority("USER")
+		        .requestMatchers("/").permitAll() //Permetti redirect alla login
 		        .and().formLogin().defaultSuccessUrl("/pizzas")
 		        .and().logout();		
 			return http.build();
